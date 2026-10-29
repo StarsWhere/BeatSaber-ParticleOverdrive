@@ -1,4 +1,4 @@
-﻿using ParticleOverdrive.Misc;
+using ParticleOverdrive.Misc;
 using System.Collections;
 using System.Linq;
 using UnityEngine;
@@ -21,7 +21,7 @@ namespace ParticleOverdrive.Controllers
             _dustParticlesName = _environmentData switch
             {
                 null => "DustPS",
-                _ => _environmentData.environmentInfo.serializedName switch
+                _ => _environmentData.environmentSerializedName switch
                 {
                     "BritneyEnvironment" => "DustBritney",
                     _ => "DustPS"
