@@ -9,7 +9,13 @@ if (-not (Test-Path -LiteralPath (Join-Path $game 'Beat Saber_Data/Managed/Main.
 }
 $obj = Join-Path $root '.tmp/obj/'
 $out = Join-Path $root '.tmp/out/'
+$inputRoot = Join-Path $root '.tmp/game-refs'
+foreach ($directory in @('Beat Saber_Data/Managed', 'Plugins', 'Libs')) {
+    $destination = Join-Path $inputRoot $directory
+    New-Item -ItemType Directory -Path $destination -Force | Out-Null
+    Copy-Item -Path (Join-Path $game "$directory/*.dll") -Destination $destination -Force
+}
 dotnet build (Join-Path $root 'ParticleOverdrive/ParticleOverdrive.csproj') -c Release `
-    "-p:BeatSaberDir=$game" "-p:BaseIntermediateOutputPath=$obj" "-p:OutputPath=$out" `
-    '-p:DisableCopyToPlugins=True' '-p:DisableZipRelease=True'
+    "-p:BeatSaberDir=$inputRoot" "-p:GameDirectory=$inputRoot" "-p:BaseIntermediateOutputPath=$obj" "-p:OutputPath=$out" `
+    '-p:DisableCopyToGame=True' '-p:DisableCopyToPlugins=True' '-p:DisableZipRelease=True'
 if ($LASTEXITCODE -ne 0) { throw "Build failed ($LASTEXITCODE)" }
